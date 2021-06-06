@@ -5,6 +5,8 @@
 @File ：bdwenku.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
+@Version: V1.0
+@Description: 百度文库爬取
 """
 
 import requests
