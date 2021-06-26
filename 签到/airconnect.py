@@ -131,15 +131,20 @@ def main():
         for key in data_dict:
             msg_content += key + ": " + data_dict[key] + "\n"
         msg_content += "\n"
+        
     try:
         import SendMsg
+        send = True
+    except:
+        send = False
 
+    if send:
         token = os.getenv('DD_SIGN_IN_BOT_TOKEN')
         secret = os.getenv('DD_SIGN_IN_BOT_SECRET')
         send = SendMsg.SendMsg(token, secret)
         send.msg("全球加速签到", msg_content)
-    finally:
-        print(msg_content)
+        
+    print(msg_content)
 
 
 if __name__ == "__main__":
