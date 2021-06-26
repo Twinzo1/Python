@@ -5,7 +5,7 @@
 @File ：airconnect.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V1.1
+@Version: V1.11
 @Description: 全球加速签到
 """
 import requests
@@ -137,7 +137,7 @@ def main():
         token = os.getenv('DD_SIGN_IN_BOT_TOKEN')
         secret = os.getenv('DD_SIGN_IN_BOT_SECRET')
         send = SendMsg.SendMsg(token, secret)
-        send.msg(title, content)
+        send.msg("全球加速签到", msg_content)
     finally:
         print(msg_content)
 
