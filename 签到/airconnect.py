@@ -10,26 +10,8 @@
 """
 import requests
 import json
-
+from pyquery import PyQuery as pq
 import os
-
-# 安装必要的库
-count = 2  # 此部分参考了 178.py
-while count:
-    try:
-        from pyquery import PyQuery as pq
-
-        break
-    except:
-        print('检测到没有 pyquery 库，开始换源进行安装')
-        if count == 2:
-            pip = 'pip3'
-        else:
-            pip = 'pip'
-        os.system(f'{pip} install pyquery -i https://pypi.tuna.tsinghua.edu.cn/simple')
-        count -= 1
-        continue
-
 
 def str2dict(dict_str):
     """
