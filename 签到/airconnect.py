@@ -5,7 +5,7 @@
 @File ：airconnect.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V1.13
+@Version: V1.14
 @Description: 全球加速签到
 """
 import requests
@@ -103,7 +103,7 @@ def main():
         "zzss": {"email": "",
                   "password": ""},
     }
-    msg_content = "全球加速签到\n" + "-----------\n"
+    msg_content = "全球加速签到\n\n" + "-----------\n"
     id = 0
     for key in account:
         ac = AirConnect(account[key]['email'], account[key]['password'])
