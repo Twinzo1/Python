@@ -5,13 +5,14 @@
 @File ：airconnect.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V1.12
+@Version: V1.13
 @Description: 全球加速签到
 """
 import requests
 import json
-from pyquery import PyQuery as pq
 import os
+from pyquery import PyQuery as pq
+
 
 def str2dict(dict_str):
     """
@@ -109,10 +110,10 @@ def main():
         data_dict = ac.get_user_data()
         data_dict.update(ac.check_in())
         id += 1
-        msg_content += "账号" + str(id) + "\n"
+        msg_content += "##### 账号" + str(id) + "\n\n"
         for key in data_dict:
-            msg_content += key + ": " + data_dict[key] + "\n"
-        msg_content += "\n"
+            msg_content += key + ": " + data_dict[key] + "\n\n"
+        msg_content += "----------\n"
         
     try:
         import SendMsg
@@ -125,9 +126,7 @@ def main():
         secret = os.getenv('DD_SIGN_IN_BOT_SECRET')
         send = SendMsg.SendMsg(token, secret)
         send.msg("全球加速签到", msg_content)
-        
     print(msg_content)
-
 
 if __name__ == "__main__":
     # 填写你的账号密码
