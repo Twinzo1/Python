@@ -67,7 +67,7 @@ class right:
         cookie = requests.utils.dict_from_cookiejar(self.login().cookies)
         return cookie
 
-    def check_in(self):
+    def get_user_data(self):
         url = self.url_prefix + "/home.php?mod=spacecp&ac=credit"
         response = requests.post(url, headers=self.headers, cookies=self.cookie)
 
@@ -78,17 +78,48 @@ class right:
             if "xi1 cl" in str(li_html):
                 coin_txt = li_html.text()
                 ret_msg = coin_txt[0:int(coin_txt.index('nb')) + 2]
-                i = 2
+                i = 1
                 continue
             if i != 0:
                 ret_msg += "\n" + li_html.text().replace('\n', '')
                 i += 1
-            if i == 4:
+            if i == 3:
                 break
 
         return escape2dict(ret_msg)
 
+def main():
+    account = {
+        "zzzz": {"email": "",
+                  "password": ""},
+        "zzss": {"email": "",
+                  "password": ""},
+    }
+    msg_content = "#### **恩山论坛签到**\n\n-------\n"
+    id = 0
+    for key in account:
+        right_forum = right(account[key]['email'], account[key]['password'])
+        data_dict = right_forum.get_user_data()
+        id += 1
+        msg_content = "".join((msg_content, "##### <font color=#87CEEB>**账号", str(id), "**</font>\n\n"))
+        for key in data_dict:
+            msg_content = "".join((msg_content, "<font color=#DA70D6>", key, "</font>：", data_dict[key], "\n\n"))
+        msg_content += "----------\n"
 
+        
+    try:
+        import SendMsg
+        send = True
+    except:
+        send = False
+
+    if send:
+        token = os.getenv('DD_SIGN_IN_BOT_TOKEN')
+        secret = os.getenv('DD_SIGN_IN_BOT_SECRET')
+        send = SendMsg.SendMsg(token, secret)
+        send.msg("恩山论坛签到", msg_content)
+    print(msg_content)
+
+    
 if __name__ == '__main__':
-    right_com = right("", "")
-    print(right_com.check_in())
+    main()
