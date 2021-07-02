@@ -5,7 +5,7 @@
 @File ：airconnect.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V1.14
+@Version: V1.15
 @Description: 全球加速签到
 """
 import requests
@@ -103,17 +103,18 @@ def main():
         "zzss": {"email": "",
                   "password": ""},
     }
-    msg_content = "全球加速签到\n\n" + "-----------\n"
+    msg_content = "".join((msg_content, "#### **全球加速签到**", "\n\n", "-------\n",
     id = 0
     for key in account:
         ac = AirConnect(account[key]['email'], account[key]['password'])
         data_dict = ac.get_user_data()
         data_dict.update(ac.check_in())
         id += 1
-        msg_content += "##### 账号" + str(id) + "\n\n"
+        msg_content = "".join((msg_content, "##### <font color=#87CEEB>**账号", str(id), "**</font>\n\n"))
         for key in data_dict:
-            msg_content += key + ": " + data_dict[key] + "\n\n"
+            msg_content = "".join((msg_content, "<font color=#DA70D6>", key, "</font>：", data_dict[key], "\n\n"))
         msg_content += "----------\n"
+
         
     try:
         import SendMsg
