@@ -173,7 +173,6 @@ def main():
     for key in account:
         right_com = SCUTracing(account[key]['name'], account[key]['password'])
         data_dict = right_com.check_in()
-        print(data_dict)
         id += 1
         msg_content = "".join((msg_content, "#### **车队论坛登录**", "\n\n", "-------", "\n",
                                "##### <font color=#87CEEB>**账号", str(id), "**</font>\n\n"))
