@@ -5,7 +5,7 @@
 @File ：SCUTracing.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@@Version: V1.01
+@@Version: V1.02
 @Description: 
 """
 import requests
@@ -176,7 +176,8 @@ def main():
         id += 1
         msg_content = "".join((msg_content, "##### <font color=#87CEEB>**账号", str(id), "**</font>\n\n"))
         for key in data_dict:
-            msg_content = "".join((msg_content, "<font color=#DA70D6>", key, "</font>：", data_dict[key], "\n\n"))
+            msg_content = "".join((msg_content, "#### **车队论坛登录**", "\n\n", "-------", "\n",
+                       "##### <font color=#87CEEB>**账号", str(id), "**</font>\n\n"))
         msg_content += "----------\n"
 
     try:
