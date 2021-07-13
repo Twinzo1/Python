@@ -181,10 +181,10 @@ class BDWenKu:
 
 if __name__ == '__main__':
     # 填写你的cookie，不填只能爬取部分
-    # cookie_str = ""
+    cookie_str = ""
     # # 百度文库url
     bidu_url = "https://wenku.baidu.com/view/0959513c6fdb6f1aff00bed5b9f3f90f76c64dc8.html"
     # main()
-    bidu = BDWenKu(bidu_url)
-    bidu.download("word")
+    bidu = BDWenKu(bidu_url, cookie_str)
+    bidu.download()
 
