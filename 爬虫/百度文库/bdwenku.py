@@ -5,7 +5,7 @@
 @File ：bdwenku.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V2.1
+@Version: V2.2
 @Description: 百度文库爬取
 """
 
@@ -141,9 +141,9 @@ class BDWenKu:
 
     def download(self, doc_type="txt"):
         if doc_type == "word":
-            self.download_in_txt()
-        else:
             self.download_in_docx()
+        else:
+            self.download_in_txt()
 
     def download_in_txt(self):
         url_info_dict_list = self.get_page_url()
