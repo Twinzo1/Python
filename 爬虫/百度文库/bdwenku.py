@@ -5,7 +5,7 @@
 @File ：bdwenku.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V2.0
+@Version: V2.1
 @Description: 百度文库爬取
 """
 
@@ -16,6 +16,7 @@ from pyquery import PyQuery as pq
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_LINE_SPACING
+
 
 def str2dict(dict_str):
     """
@@ -57,6 +58,7 @@ def format_dict_str(dict_str):
         sp1 = ",".join(comma_str)
         colon_str.append(sp1)
     return ":".join(colon_str)
+
 
 class BDWenKu:
     def __init__(self, bd_url, bd_cookie=""):
@@ -130,7 +132,7 @@ class BDWenKu:
         res_content_list = []
 
         for i, val in enumerate(res_list):
-            if i != 0 and str(val[1]) == str(res_list[i-1][1]):
+            if i != 0 and str(val[1]) == str(res_list[i - 1][1]):
                 res_content_list[-1] = str(res_content_list[-1]) + str(val[0])
             else:
                 res_content_list.append(val[0])
@@ -138,11 +140,11 @@ class BDWenKu:
         return res_content_list
 
     def download(self, doc_type="txt"):
-        if doc_type = "word":
+        if doc_type == "word":
             self.download_in_txt()
         else:
             self.download_in_docx()
-            
+
     def download_in_txt(self):
         url_info_dict_list = self.get_page_url()
         for url_info_dict in url_info_dict_list:
@@ -178,6 +180,7 @@ class BDWenKu:
                 paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.AT_LEAST
                 paragraph_format.line_spacing = Pt(13)
         document.save("./" + self.title + ".docx")
+
 
 if __name__ == '__main__':
     # 填写你的cookie，不填只能爬取部分
