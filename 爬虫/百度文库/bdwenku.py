@@ -5,7 +5,7 @@
 @File ：bdwenku.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V2.21
+@Version: V2.22
 @Description: 百度文库爬取
 """
 
@@ -185,8 +185,9 @@ class BDWenKu:
 if __name__ == '__main__':
     # 填写你的cookie，不填只能爬取部分
     cookie_str = "“
-    # # 百度文库url
+    # 百度文库url
     bidu_url = "https://wenku.baidu.com/link?url=Uc1oG393S7TgZzVBlFuN5HiZXy8YRbH4ttS02yNC9OrPwSk6wUr-y5Cd-XACf7EnsWCL67V90VhYFsRGXSbHzCo4bUp4_YXsR5ThiYbIP8J96Athv4gRu1kJsqjAeZCE"
-    # main()
     bidu = BDWenKu(bidu_url, cookie_str)
+    # 默认下载txt格式
+    # 下载docx格式可修改为  bidu.download("word")
     bidu.download()
