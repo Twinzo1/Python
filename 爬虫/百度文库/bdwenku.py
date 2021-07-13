@@ -5,7 +5,7 @@
 @File ：bdwenku.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V2.2
+@Version: V2.21
 @Description: 百度文库爬取
 """
 
@@ -90,7 +90,7 @@ class BDWenKu:
 
     def with_cookie(self, url, headers=""):
         headers = self.headers if headers == "" else headers
-        if not self.cookie or len(self.cookie.strip()) == 0:
+        if not self.cookie or len(str(self.cookie).strip()) == 0:
             res = requests.get(url, headers=headers)
         else:
             res = requests.get(url, cookies=self.cookie, headers=headers)
@@ -184,10 +184,9 @@ class BDWenKu:
 
 if __name__ == '__main__':
     # 填写你的cookie，不填只能爬取部分
-    cookie_str = ""
+    cookie_str = "“
     # # 百度文库url
-    bidu_url = "https://wenku.baidu.com/view/0959513c6fdb6f1aff00bed5b9f3f90f76c64dc8.html"
+    bidu_url = "https://wenku.baidu.com/link?url=Uc1oG393S7TgZzVBlFuN5HiZXy8YRbH4ttS02yNC9OrPwSk6wUr-y5Cd-XACf7EnsWCL67V90VhYFsRGXSbHzCo4bUp4_YXsR5ThiYbIP8J96Athv4gRu1kJsqjAeZCE"
     # main()
     bidu = BDWenKu(bidu_url, cookie_str)
     bidu.download()
-
