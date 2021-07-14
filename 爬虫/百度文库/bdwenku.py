@@ -5,18 +5,21 @@
 @File ：bdwenku.py
 @IDE ：PyCharm
 @Motto：ABC(Always Be Coding)
-@Version: V2.22
+@Version: V3.0
 @Description: 百度文库爬取
+依赖库: requests, python_docx, python_pptx, pyquery
+自动识别下载文件格式
 """
-
 import requests
 import json
 import re
+import os
 from pyquery import PyQuery as pq
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_LINE_SPACING
-
+import pptx
+from pptx.util import Inches
 
 def str2dict(dict_str):
     """
@@ -27,7 +30,6 @@ def str2dict(dict_str):
     json_str = json.loads(json_data)
     ret_dict = dict([item.split("=", 1) for item in json_str.split(";")])
     return ret_dict
-
 
 def format_dict_str(dict_str):
     """
@@ -70,13 +72,12 @@ class BDWenKu:
         self.url = bd_url
         self.pq_html = self.get_html()
         self.title = self.get_title()
+        self.homepage_script_dict = self.get_homepage_content_dict()
+        self.file_type = self.get_file_type()
 
     def get_html(self):
         """
         获取网页html
-        :param url:
-        :param headers:
-        :param code:
         :return:
         """
         headers = {"user-agent": "LogStatistic"}
@@ -97,20 +98,36 @@ class BDWenKu:
         res.encoding = res.apparent_encoding
         return res
 
-    def get_page_url(self):
+    def get_homepage_content_dict(self):
         """
-        用于获取每一页的url
-        :return:
+        获取主页的数据
+        :return:返回字典类型
         """
         content = self.pq_html('script')
         for url_info in content.items():
             if "var pageData" in url_info.text():
                 url_list = re.findall(r"=(.+);.?window.pageData", url_info.text())
                 content_have_url_dict = json.loads(url_list[0])
-                break
+                return content_have_url_dict
 
-        url_dict_list = json.loads(content_have_url_dict['readerInfo']['htmlUrls'])['json']
-        return url_dict_list
+    def get_page_url(self):
+        """
+        用于获取每一页的url
+        :return:
+        """
+        content_have_url_dict = self.homepage_script_dict
+        html_urls = json.loads(content_have_url_dict['readerInfo']['htmlUrls'])
+        if self.file_type == "ppt":
+            return html_urls
+        return html_urls['json']
+
+    def get_file_type(self):
+        """
+        获取文件类型
+        :return:
+        """
+        content_have_url_dict = self.homepage_script_dict
+        return content_have_url_dict['viewBiz']['docInfo']['fileType']
 
     def get_page_content(self, page_url):
         """
@@ -140,10 +157,46 @@ class BDWenKu:
         return res_content_list
 
     def download(self, doc_type="txt"):
-        if doc_type == "word":
+        if self.file_type == "ppt":
+            self.download_in_ppt()
+        elif self.file_type == "word":
             self.download_in_docx()
         else:
             self.download_in_txt()
+
+    def download_in_ppt(self):
+        url_info_dict_list = self.get_page_url()
+
+        pictures = []
+        save_dir = "./" + self.title.strip()
+        try:
+            os.mkdir(save_dir)
+        except FileExistsError:
+            print("文件夹已存在")
+        pptx_name = '{}.{}'.format(save_dir + "/" + self.title, 'pptx')
+        for jpg_num, jpg_url in enumerate(url_info_dict_list):
+            response = requests.get(jpg_url)
+
+            # 写入文本
+            # print("开始下载第{}页数据".format(url_info_dict['pageIndex']))
+            save_name = "/".join((save_dir, str(jpg_num))) + '.jpg'
+            pictures.append(save_name)
+            with open(save_name, "wb") as f:
+                f.write(response.content)
+
+        # 创建ppt
+        ppt_file = pptx.Presentation()
+
+        for fn in pictures:
+            slide = ppt_file.slides.add_slide(ppt_file.slide_layouts[1])
+
+            # 为PPTX文件当前幻灯片中第一个文本框设置文字，本文代码中可忽略
+            # slide.shapes.placeholders[0].text = fn[:fn.rindex('.')]
+
+            # 导入并为当前幻灯片添加图片，起始位置和尺寸可修改
+            slide.shapes.add_picture(fn, Inches(0), Inches(0), Inches(10), Inches(7.5))
+
+            ppt_file.save(pptx_name)
 
     def download_in_txt(self):
         url_info_dict_list = self.get_page_url()
@@ -184,10 +237,9 @@ class BDWenKu:
 
 if __name__ == '__main__':
     # 填写你的cookie，不填只能爬取部分
-    cookie_str = "“
+    cookie_str = ""
     # 百度文库url
-    bidu_url = "https://wenku.baidu.com/link?url=Uc1oG393S7TgZzVBlFuN5HiZXy8YRbH4ttS02yNC9OrPwSk6wUr-y5Cd-XACf7EnsWCL67V90VhYFsRGXSbHzCo4bUp4_YXsR5ThiYbIP8J96Athv4gRu1kJsqjAeZCE"
+    bidu_url = "https://wenku.baidu.com/view/bc18df72ba4ae45c3b3567ec102de2bd9605de7d.html"
+    # main()
     bidu = BDWenKu(bidu_url, cookie_str)
-    # 默认下载txt格式
-    # 下载docx格式可修改为  bidu.download("word")
     bidu.download()
